@@ -180,13 +180,16 @@ class MainWindow(QtWidgets.QMainWindow):
             self.difficultes.append([self.propmot, self.proptrad[self.index_q]])
 
         if self.TirerMots():
-            window = ListeWindow(self, self.difficultes)
-            window.show()
-
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle("Bravo!")
-            if self.difficultes != []:  msg.setText("Bravo! Tu connais tous les mots de vocabulaire de la liste!\nVoici les mots que tu ne connais pas parfaitements:")
-            else:                       msg.setText("Bravo! Tu connais tous les mots de vocabulaire de la liste!")
+            if len(self.difficultes) != 0:
+                msg.setText("Bravo! Tu connais tous les mots de vocabulaire de la liste!\nVoici les mots que tu ne connais pas parfaitements:")
+            else:
+                msg.setText("Bravo! Tu connais tous les mots de vocabulaire de la liste!\nVoici la liste que tu viens de réviser:")
+                for i in range(self.nb_mots):   self.difficultes.append([self.mot[i], self.trad[i]])
+
+            window = ListeWindow(self, self.difficultes)
+            window.show()
             msg.exec()
 
             self.ViderTout()

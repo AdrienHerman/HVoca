@@ -41,13 +41,14 @@ class ListeWindow(QtWidgets.QMainWindow, Ui_ListeWindow):
         self.actionOuvrir_une_liste_de_vocabulaire.triggered.connect(self.OuvrirListe)
         self.actionQuitter.triggered.connect(self.close)
 
-        if parent.filepath != "" and data == None:
-            self.filepath = parent.filepath
-            self.ParseData()
-            self.UpdateTable()
-        elif parent.filepath == "" and data == None:
-            self.OuvrirListe()
-        elif data != [] and data != None:
+        if data == None:
+            if parent.filepath != "":
+                self.filepath = parent.filepath
+                self.ParseData()
+                self.UpdateTable()
+            elif parent.filepath == "":
+                self.OuvrirListe()
+        else:
             self.data = data
             self.filepath = "Mot de vocabulaires à revoir d'après la série précédente"
             self.UpdateTable()
