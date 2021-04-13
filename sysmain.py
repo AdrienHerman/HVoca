@@ -13,6 +13,7 @@ from sysapropos import AProposWindow
 from sysfauxui import FauxWindow
 from sysmodifier import ModifierWindow
 from sysnouveau import NouveauWindow
+from sysliste import ListeWindow
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -29,6 +30,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # Vairiables d'environnement
         self.mot = []
         self.trad = []
+        self.difficultes = []
         self.modeinverse = False
 
         # Menubar
@@ -36,6 +38,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.ui.actionNouvelle_liste_de_vocabulaire.triggered.connect(self.NouvelleListe)
         self.ui.actionOuvrir_une_liste_de_vocabulaire.triggered.connect(self.OuvrirListe)
         self.ui.actionModifier_une_liste_de_vocabulaire.triggered.connect(self.ModifierListe)
+        self.ui.actionAfficher_une_liste_de_vocabulaire.triggered.connect(self.AffListe)
+        self.ui.actionConvertir_une_liste_de_vocabualire_en_pdf.triggered.connect(self.ConvListPDF)
         self.ui.actionQuitter.triggered.connect(QtWidgets.QApplication.quit)
         #       Aide
         self.ui.action_propos.triggered.connect(self.APropos)
@@ -56,6 +60,24 @@ class MainWindow(QtWidgets.QMainWindow):
         self.activateWindow()
 
         self.Jeu()
+
+    def ConvListPDF(self):
+        """
+        Convertir une liste de vocabulaire en fichier PDF.
+        :return: None
+        """
+        msg = QtWidgets.QMessageBox()
+        msg.setWindowTitle("Information")
+        msg.setText("Patience... Cette fonctionnalité n'est pas encore disponible...")
+        msg.exec()
+
+    def AffListe(self):
+        """
+        Afficher une liste de vocabulaire.
+        :return: None
+        """
+        window = ListeWindow(self)
+        window.show()
 
     def Inverse(self):
         """
@@ -155,11 +177,16 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             window = FauxWindow(self)
             window.show()
+            self.difficultes.append([self.propmot, self.proptrad[self.index_q]])
 
         if self.TirerMots():
+            window = ListeWindow(self, self.difficultes)
+            window.show()
+
             msg = QtWidgets.QMessageBox()
             msg.setWindowTitle("Bravo!")
-            msg.setText("Bravo! Tu connais tous les mots de vocabulaire de la liste!")
+            if self.difficultes != []:  msg.setText("Bravo! Tu connais tous les mots de vocabulaire de la liste!\nVoici les mots que tu ne connais pas parfaitements:")
+            else:                       msg.setText("Bravo! Tu connais tous les mots de vocabulaire de la liste!")
             msg.exec()
 
             self.ViderTout()
@@ -231,11 +258,6 @@ class MainWindow(QtWidgets.QMainWindow):
             self.UpdateScore()
 
             self.TirerMots()
-        else:
-            msg = QtWidgets.QMessageBox()
-            msg.setText("Erreur lors du chargement du fichier")
-            msg.setWindowTitle("ERREUR")
-            msg.exec()
 
     def ParseData(self):
         """
