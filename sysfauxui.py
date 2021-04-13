@@ -16,7 +16,7 @@ class FauxWindow(QtWidgets.QMainWindow, Ui_MauvRep):
         super(FauxWindow, self).__init__(parent)
         self.setupUi(self)
         self.mot = parent.propmot
-        self.trad = parent.proptrad
+        self.trad = parent.proptrad[parent.index_q]
 
         self.motcorrige.setText(self.trad)
         self.ok.clicked.connect(self.Verif)

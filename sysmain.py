@@ -55,9 +55,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.show()
         self.activateWindow()
 
-        # Variables d'environnement
-        self.ViderTout()
-
         self.Jeu()
 
     def Inverse(self):
@@ -151,8 +148,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         if correct:
             self.mot_connus += 1
-            del self.mot_q[self.index[self.index_q]]
-            del self.trad_q[self.index[self.index_q]]
+            del self.mot_q[self.index_mot_q]
+            del self.trad_q[self.index_mot_q]
 
             self.UpdateScore()
         else:
@@ -192,18 +189,20 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Choix aléatoire des mots
         if len(self.mot_q) != 0:
-            self.index = [randint(0, len(self.mot_q) - 1) for _ in range(3)]
-
-            while self.index[0] == self.index[1] or self.index[0] == self.index[2] or self.index[1] == self.index[2]:
-                self.index = [randint(0, len(self.mot_q) - 1) for _ in range(3)]
+            self.index = [randint(0, len(self.mot) - 1) for _ in range(3)]
 
             self.index_q = randint(0, 2)
+            self.index_mot_q = randint(0, len(self.mot_q) - 1)
+            index_mot = self.mot.index(self.mot_q[self.index_mot_q])
 
-            self.index[self.index_q] = randint(0, len(self.mot_q) - 1)
+            while self.index[0] == self.index[1] or self.index[0] == self.index[2] or self.index[1] == self.index[2] or self.index[0] == index_mot or self.index[1] == index_mot or self.index[2] == index_mot:
+                self.index = [randint(0, len(self.mot) - 1) for _ in range(3)]
 
-            self.propmot = self.mot_q[self.index[self.index_q]]
-            self.proptrad = [self.mot[i] for i in self.index]
-            self.proptrad[self.index_q] = self.mot_q[self.index[self.index_q]]
+            self.index[self.index_q] = self.index_mot_q
+
+            self.propmot = self.mot_q[self.index_mot_q]
+            self.proptrad = [self.trad[i] for i in self.index]
+            self.proptrad[self.index_q] = self.trad_q[self.index_mot_q]
 
             self.UpdateMot()
 
@@ -219,7 +218,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # Récupérer les mots
         if self.ParseData():
             # Variables du jeu
-
             if self.modeinverse:
                 self.mot = [trad for trad in self.trad]
                 self.trad = [mot for mot in self.mot]
@@ -233,6 +231,11 @@ class MainWindow(QtWidgets.QMainWindow):
             self.UpdateScore()
 
             self.TirerMots()
+        else:
+            msg = QtWidgets.QMessageBox()
+            msg.setText("Erreur lors du chargement du fichier")
+            msg.setWindowTitle("ERREUR")
+            msg.exec()
 
     def ParseData(self):
         """
