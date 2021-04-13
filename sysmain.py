@@ -55,6 +55,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.show()
         self.activateWindow()
 
+        # Variables d'environnement
+        self.ViderTout()
+
         self.Jeu()
 
     def Inverse(self):
@@ -120,7 +123,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mot_q = []
         self.trad_q = []
         self.index = []
+        self.difficultes = []
         self.index_q = -1
+        self.propmot = ""
+        self.proptrad = ["" for _ in range(3)]
         self.score = 0
         self.nb_mots = 0
         self.filepath = None
@@ -133,59 +139,20 @@ class MainWindow(QtWidgets.QMainWindow):
         """
         correct = False
 
-        if self.modeinverse:
-            if len(self.mot_q) > 2:
-                if bouton == 0:
-                    window = FauxWindow(self)
-                    window.show()
-                elif bouton == 1 and self.ui.prop1.text() == self.mot_q[self.index_q]:
-                    correct = True
-                elif bouton == 2 and self.ui.prop2.text() == self.mot_q[self.index_q]:
-                    correct = True
-                elif bouton == 3 and self.ui.prop3.text() == self.mot_q[self.index_q]:
-                    correct = True
-            else:
-                if bouton == 0:
-                    window = FauxWindow(self)
-                    window.show()
-                elif bouton == 1 and self.ui.prop1.text() == self.mot[self.index[self.index_q]]:
-                    correct = True
-                elif bouton == 2 and self.ui.prop2.text() == self.mot[self.index[self.index_q]]:
-                    correct = True
-                elif bouton == 3 and self.ui.prop3.text() == self.mot[self.index[self.index_q]]:
-                    correct = True
-        else:
-            if len(self.mot_q) > 2:
-                if bouton == 0:
-                    window = FauxWindow(self)
-                    window.show()
-                elif bouton == 1 and self.ui.prop1.text() == self.trad_q[self.index_q]:
-                    correct = True
-                elif bouton == 2 and self.ui.prop2.text() == self.trad_q[self.index_q]:
-                    correct = True
-                elif bouton == 3 and self.ui.prop3.text() == self.trad_q[self.index_q]:
-                    correct = True
-            else:
-                if bouton == 0:
-                    window = FauxWindow(self)
-                    window.show()
-                elif bouton == 1 and self.ui.prop1.text() == self.trad[self.index[self.index_q]]:
-                    correct = True
-                elif bouton == 2 and self.ui.prop2.text() == self.trad[self.index[self.index_q]]:
-                    correct = True
-                elif bouton == 3 and self.ui.prop3.text() == self.trad[self.index[self.index_q]]:
-                    correct = True
+        if bouton == 0:
+            window = FauxWindow(self)
+            window.show()
+        elif bouton == 1 and self.index_q == 0:
+            correct = True
+        elif bouton == 2 and self.index_q == 1:
+            correct = True
+        elif bouton == 3 and self.index_q == 2:
+            correct = True
 
-        if correct and len(self.mot_q) > 2:
+        if correct:
             self.mot_connus += 1
-            del self.mot_q[self.index_q]
-            del self.trad_q[self.index_q]
-
-            self.UpdateScore()
-        elif correct and len(self.mot_q) <= 2:
-            self.mot_connus += 1
-            del self.mot_q[0]
-            del self.trad_q[0]
+            del self.mot_q[self.index[self.index_q]]
+            del self.trad_q[self.index[self.index_q]]
 
             self.UpdateScore()
         else:
@@ -205,28 +172,10 @@ class MainWindow(QtWidgets.QMainWindow):
         Mettre à jour les traductions suggérés dans les boutons et le mot dans le label.
         :return: None
         """
-        if self.modeinverse:
-            if len(self.mot_q) > 2:
-                self.ui.prop1.setText(self.mot_q[self.index[0]])
-                self.ui.prop2.setText(self.mot_q[self.index[1]])
-                self.ui.prop3.setText(self.mot_q[self.index[2]])
-                self.ui.motvoca.setText(self.trad_q[self.index_q])
-            else:
-                self.ui.prop1.setText(self.mot[self.index[0]])
-                self.ui.prop2.setText(self.mot[self.index[1]])
-                self.ui.prop3.setText(self.mot[self.index[2]])
-                self.ui.motvoca.setText(self.trad[self.index[self.index_q]])
-        else:
-            if len(self.mot_q) > 2:
-                self.ui.prop1.setText(self.trad_q[self.index[0]])
-                self.ui.prop2.setText(self.trad_q[self.index[1]])
-                self.ui.prop3.setText(self.trad_q[self.index[2]])
-                self.ui.motvoca.setText(self.mot_q[self.index_q])
-            else:
-                self.ui.prop1.setText(self.trad[self.index[0]])
-                self.ui.prop2.setText(self.trad[self.index[1]])
-                self.ui.prop3.setText(self.trad[self.index[2]])
-                self.ui.motvoca.setText(self.mot[self.index[self.index_q]])
+        self.ui.prop1.setText(self.proptrad[0])
+        self.ui.prop2.setText(self.proptrad[1])
+        self.ui.prop3.setText(self.proptrad[2])
+        self.ui.motvoca.setText(self.propmot)
 
     def UpdateScore(self):
         """
@@ -242,37 +191,25 @@ class MainWindow(QtWidgets.QMainWindow):
         """
 
         # Choix aléatoire des mots
-        if len(self.mot_q) > 2:
+        if len(self.mot_q) != 0:
             self.index = [randint(0, len(self.mot_q) - 1) for _ in range(3)]
 
             while self.index[0] == self.index[1] or self.index[0] == self.index[2] or self.index[1] == self.index[2]:
                 self.index = [randint(0, len(self.mot_q) - 1) for _ in range(3)]
 
-            self.index_q = self.index[randint(0, 2)]
-        elif len(self.mot_q) == 2:
-            self.index = [randint(0, 1) for _ in range(2)]
-
-            while self.index[0] == self.index[1]:
-                self.index = [randint(0, 1) for _ in range(2)]
-
-            self.index.append(randint(0, len(self.mot) - 1))
-
-            self.index_q = randint(0, 1)
-            self.index[0] = self.mot.index(self.mot_q[self.index[0]])
-            self.index[1] = self.mot.index(self.mot_q[self.index[1]])
-        elif len(self.mot_q) == 1:
-            self.index = [randint(0, self.nb_mots - 1) for _ in range(3)]
-
-            while self.index[0] == self.index[1] or self.index[0] == self.index[2] or self.index[1] == self.index[2]:
-                self.index = [randint(0, self.nb_mots - 1) for _ in range(3)]
-
             self.index_q = randint(0, 2)
 
-            self.index[self.index_q] = self.mot.index(self.mot_q[0])
+            self.index[self.index_q] = randint(0, len(self.mot_q) - 1)
+
+            self.propmot = self.mot_q[self.index[self.index_q]]
+            self.proptrad = [self.mot[i] for i in self.index]
+            self.proptrad[self.index_q] = self.mot_q[self.index[self.index_q]]
+
+            self.UpdateMot()
+
+            return False
         else:
             return True
-
-        self.UpdateMot()
 
     def Jeu(self):
         """
@@ -282,6 +219,11 @@ class MainWindow(QtWidgets.QMainWindow):
         # Récupérer les mots
         if self.ParseData():
             # Variables du jeu
+
+            if self.modeinverse:
+                self.mot = [trad for trad in self.trad]
+                self.trad = [mot for mot in self.mot]
+
             self.mot_q = [mot for mot in self.mot]
             self.trad_q = [trad for trad in self.trad]
             self.mot_connus = 0
