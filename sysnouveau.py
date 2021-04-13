@@ -135,3 +135,7 @@ class NouveauWindow(QtWidgets.QMainWindow, Ui_NouvelleListe):
             self.trad.append(trad)
             self.liste.append(mot + " / " + trad)
             self.UpdateCombobox()
+
+        self.motedit.setText("")
+        self.tradedit.setText("")
+        self.motedit.setFocus()

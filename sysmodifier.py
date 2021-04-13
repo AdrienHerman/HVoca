@@ -153,3 +153,7 @@ class ModifierWindow(QtWidgets.QMainWindow, Ui_ModifierListe):
             self.trad.append(trad)
             self.liste.append(mot + " / " + trad)
             self.UpdateCombobox()
+
+        self.motedit.setText("")
+        self.tradedit.setText("")
+        self.motedit.setFocus()
