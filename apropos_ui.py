@@ -36,6 +36,6 @@ class Ui_apropos(object):
     def retranslateUi(self, apropos):
         _translate = QtCore.QCoreApplication.translate
         apropos.setWindowTitle(_translate("apropos", "À Propos"))
-        self.label.setText(_translate("apropos", "<html><head/><body><p align=\"center\">Version 1.1</p></body></html>"))
+        self.label.setText(_translate("apropos", "<html><head/><body><p align=\"center\">Version: Beta1.1-1</p></body></html>"))
         self.label_2.setText(_translate("apropos", "<html><head/><body><p align=\"center\">Herman Adrien</p></body></html>"))
         self.label_3.setText(_translate("apropos", "<html><head/><body><p align=\"center\">Avril 2021</p></body></html>"))

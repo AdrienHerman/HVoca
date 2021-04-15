@@ -32,6 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.trad = []
         self.difficultes = []
         self.modeinverse = False
+        self.partie_en_cours = False
 
         # Menubar
         #       Fichier
@@ -149,6 +150,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.score = 0
         self.nb_mots = 0
         self.filepath = None
+        self.partie_en_cours = False
 
     def Reponse(self, bouton):
         """
@@ -156,6 +158,8 @@ class MainWindow(QtWidgets.QMainWindow):
         :param bouton: Numéro du bouton appuyé
         :return: None
         """
+        if not self.partie_en_cours:    return
+
         correct = False
 
         if bouton == 0:
@@ -249,8 +253,9 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.ParseData():
             # Variables du jeu
             if self.modeinverse:
+                temp = [mot for mot in self.mot]
                 self.mot = [trad for trad in self.trad]
-                self.trad = [mot for mot in self.mot]
+                self.trad = [mot for mot in temp]
 
             self.mot_q = [mot for mot in self.mot]
             self.trad_q = [trad for trad in self.trad]
@@ -259,6 +264,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
             # Score en cours
             self.UpdateScore()
+
+            self.partie_en_cours = True
 
             self.TirerMots()
 

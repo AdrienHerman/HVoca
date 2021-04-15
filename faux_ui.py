@@ -69,5 +69,5 @@ class Ui_MauvRep(object):
         self.label.setText(_translate("MauvRep", "<html><head/><body><p><span style=\" font-size:18pt; font-weight:600; color:#ff0000;\">Faux!</span></p></body></html>"))
         self.label_2.setText(_translate("MauvRep", "<html><head/><body><p><span style=\" font-size:14pt;\">Correction: </span></p></body></html>"))
         self.motcorrige.setText(_translate("MauvRep", "<html><head/><body><p><span style=\" font-size:14pt;\">Mot Corrigé</span></p></body></html>"))
-        self.label_4.setText(_translate("MauvRep", "Tappes le mot:"))
+        self.label_4.setText(_translate("MauvRep", "Tapes le mot:"))
         self.ok.setText(_translate("MauvRep", "OK"))
